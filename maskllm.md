@@ -100,7 +100,8 @@ Then we increase the probability of candidate masks based on the similarity.
 ## 5. Results
 The perplexity and accuracy comparison with Magnitude, SparseGPT and Wanda on various datasets. Authors suspect that the superiority on performance mainly arises from this factor. Difficulty of computing the pruning error, Existing methods use approximated metrics to estimate weight importance where this paper finds weight importance through end-to-end training on large-scale datasets, optimizing language modeling loss function.
 <br><br>
-<img src="Comparison.PNG"><br>
+<!-- <img src="Comparison.png" width="800" height="600"><br><br> -->
+![Alt text](Comparison.PNG)<br>
 Increasing the calibration set beyond 256 does not improve SparseGPT performance, but MaskLLM scales to large datasets.<br>
 <!-- <img src="Sample vs Perplexity.png" width="800" height="600"><br><br> --> -->
 ![Alt text](Sample_vs_Perplexity.png)<br>
