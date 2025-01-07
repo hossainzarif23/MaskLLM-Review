@@ -44,7 +44,7 @@ $N:M$ sparsity can be formulated as a mask selection problem with candidate set 
 \end{bmatrix}
 \right\}
 ```
-For an LLM, there exists a substantial number of parameter blocks, denoted as $\left\{\mathcal{W}_i\right\}$, each requiring the selection of corresponding masks $\left\{\mathcal{M}_i\right\}$. For $N:M$ sparsity, we can define this objective for learning mask selection.
+For an LLM, there exists a substantial number of parameter blocks, denoted as $\{\mathcal{W}_i\}$, each requiring the selection of corresponding masks $\{\mathcal{M}_i\}$. For $N:M$ sparsity, we can define this objective for learning mask selection.
 ```math
 \large \{\mathcal{W}_i\} = \argmin_{\left\{\mathcal{M}_i \mid \mathcal{M}_i \in \mathcal{S}^{2:4}\right\}} 
 \mathbb{E}_{x \sim p(x)} 
