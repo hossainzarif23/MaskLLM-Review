@@ -45,56 +45,56 @@ $N:M$ sparsity can be formulated as a mask selection problem with candidate set 
 \right\}
 ```
 For an LLM, there exists a substantial number of parameter blocks, denoted as $\left\{\mathcal{W}_i\right\}$, each requiring the selection of corresponding masks $\left\{\mathcal{M}_i\right\}$. For $N:M$ sparsity, we can define this objective for learning mask selection.
-$$
+```math
 \large \left\{\mathcal{M}_i^*\right\} = \argmin_{\left\{\mathcal{M}_i \mid \mathcal{M}_i \in \mathcal{S}^{2:4}\right\}} 
 \mathbb{E}_{x \sim p(x)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
 \right]
-$$
+```
 But, as we can see, finding the optimal combination of masks as selection from a set of discrete elements is non-differentiable.
 ### 4.2 Walkaround
 Directly determining the exact optimal mask for a block is not feasible as the behavior of pruned LLMs should also depend on the pruning of other parameter blocks. The intuition is to sample masks independently for each block and measure the overall model quality after pruning. Consequently, let's define a categorical distribution with class probability $p_1, p_2, \cdots, p_{\lvert S \rvert}$ such that $\sum_{j} p_j = 1$. During the random sampling phase, if a certain mask achieves good quality during pruning, adjust the categorical distribution by increasing the probability of the sampled mask. With sufficient sampling and updates, the authors conjectured that this process would end with a distribution where the mask with high probability is more likely to maintain good quality after pruning. Thus the objective becomes
-$$
+```math
 \large \left\{p^*(\mathcal{M}_i)\right\} = \argmin_{\left\{p(\mathcal{M}_i)\right\}}
 \;\mathbb{E}_{x \sim p(x), \mathcal{M}_i \sim p(\mathcal{M}_i)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
 \right]
-$$
+```
 where $p(\mathcal{M}_i)$ refers to the categorical distribution of $i$-th mask $\mathcal{M}_i$. But, drawing samples from a categorical distribution is still non-differentiable.<br>
 So, we need to find out a way to do differentially sampling of masks. We can model the differential sampling operation using Gumbel softmax trick, which introduces additional noise variable into the soft sampling process following gumbel distribution. Gumbel distribution is defined as
-$$
+```math
 g_i = -\log(-\log \epsilon_i), \; \epsilon_i \sim U(0,1)
-$$
+```
 Gumbel softmax would lead to a soft and differentiable index $\large \tilde{y} = \left[\tilde{y_1}, \tilde{y_2}, \cdots, \tilde{y_{\lvert S \rvert}}\right]$
-$$
+```math
 \large \tilde{y_{i}} = \frac{\exp((\log p_i + g_i) / \tau)}{\sum_{j} \exp((\log p_j + g_j) / \tau)}
-$$
+```
 The temperature term $\tau$ is a hyper-parameter, controlling the hardness of the sampled index. While $\tau \to 0$, the soft index will be more close to a one-hot vector, resulting in $\tilde{y_i} = y_i$. Now, we can get differentiable mask $\tilde{\mathcal{M}}$ as matrix multiplication
-$$
+```math
 \tilde{\mathcal{M}} = \tilde{y} \times S
-$$
+```
 During evaluation, the masks would be selected based on argmax on $\tilde{y}$.<br>
 The authors also don't learn probability directly, instead they learn logits $\pi$ with a scaling factor $\kappa$, which produces probability $\large p_i = \frac{\exp(\pi_i \cdot \kappa)}{\sum_j \exp(\pi_j \cdot \kappa)}$. Scaling factor \kappa balances the relative magnitude of logits and gumbel noise, thus controlling the randomness of sampling.<br>
 The authors also introduced sparse weight regularization, which maintains a large magnitude in the remaining weights.
-$$
+```math
 \large \left\{p_{\pi}^*(\mathcal{M}_i)\right\} = \argmin_{\left\{p_{\pi}(\mathcal{M}_i)\right\}}
 \;\mathbb{E}_{x \sim p(x), \mathcal{M}_i \sim p(\mathcal{M}_i)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
 \right]
 - \lambda \sum_i \left\|\mathcal{W}_i \odot \mathcal{M}_i\right\|_{2}^{2} 
-$$
+```
 ### 4.3 Transfer Learning
 The precomputed masks can be obtained through **SparseGPT** or **Wanda**. For transfer learning, we would need to map the precomputed masks back to class probabilities, then MaskLLM would be able to begin with a good initialization for sampling. Given a prior mask $\mathcal{M}_o$, it's similarity to all candidate masks for $N:M$ sparsity is obtained through
-$$
+```math
 \large sim(\mathcal{M}_o, \mathcal{M}_i) = \mathcal{M}_o \mathcal{M}_i^T - N/2
-$$
+```
 Then we increase the probability of candidate masks based on the similarity.
-$$
+```math
 \large \pi_i^{'} = \pi_i + \sigma(\pi) \cdot sim(\mathcal{M}_o, \mathcal{M}_i) \cdot \alpha
-$$
+```
 ## 5. Results
 The perplexity and accuracy comparison with Magnitude, SparseGPT and Wanda on various datasets. Authors suspect that the superiority on performance mainly arises from this factor. Difficulty of computing the pruning error, Existing methods use approximated metrics to estimate weight importance where this paper finds weight importance through end-to-end training on large-scale datasets, optimizing language modeling loss function.
 <br><br>
