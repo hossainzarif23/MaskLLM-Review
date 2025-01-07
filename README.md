@@ -119,12 +119,12 @@ To deploy sparse LLMs for a single downstream task, the pre-computed general mas
 - The superior performance is likely due to end to end training with optimizing the language modeling loss function, an well established training method to train LLMs. On the other hand, previous methods applied heuristics as they didn't attempt to work on a learnable optimal masking strategy, which clearly is an inferior strategy.
 - Let's say we have a $4 \times 4$ linear layer and we want to apply $2:4$ sparsity. Then, we would have $4$ contiguous blocks of parameters. Let the optimal $2:4$ sparsity mask for this linear layer is $\left[1, 0, 0, 1\right]$ Then, the mask for the linear layer should be 
 $
-\begin{bmatrix}
+\begin{matrix}
 1 & 0 & 0 & 1 \\
 1 & 0 & 0 & 1 \\
 1 & 0 & 0 & 1 \\
 1 & 0 & 0 & 1 \\
-\end{bmatrix}
+\end{matrix}
 $
 <br>
 I suspect that, for each row, different columns might be more important but this methodology cannot address this. So, one future work can extend to finding out the optimal masking incorporating this concern.
