@@ -79,12 +79,14 @@ During evaluation, the masks would be selected based on argmax on $\tilde{y}$.<b
 The authors also don't learn probability directly, instead they learn logits $\pi$ with a scaling factor $\kappa$, which produces probability $\large p_i = \frac{\exp(\pi_i \cdot \kappa)}{\sum_j \exp(\pi_j \cdot \kappa)}$. Scaling factor \kappa balances the relative magnitude of logits and gumbel noise, thus controlling the randomness of sampling.<br>
 The authors also introduced sparse weight regularization, which maintains a large magnitude in the remaining weights.
 ```math
-\large \left\{p_{\pi}^*(\mathcal{M}_i)\right\} = \argmin_{\left\{p_{\pi}(\mathcal{M}_i)\right\}}
-\;\mathbb{E}_{x \sim p(x), \mathcal{M}_i \sim p(\mathcal{M}_i)} 
+\large p_{\pi}^*(\mathcal{M}_i) = \underset{p_{\pi}(\mathcal{M}_i)}{\arg\min} 
+\left\{ 
+\mathbb{E}_{x \sim p(x), \mathcal{M}_i \sim p(\mathcal{M}_i)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
 \right]
-- \lambda \sum_i \left\|\mathcal{W}_i \odot \mathcal{M}_i\right\|_{2}^{2} 
+- \lambda \sum_i \|\mathcal{W}_i \odot \mathcal{M}_i\|_{2}^{2}
+\right\}
 ```
 ### 4.3 Transfer Learning
 The precomputed masks can be obtained through **SparseGPT** or **Wanda**. For transfer learning, we would need to map the precomputed masks back to class probabilities, then MaskLLM would be able to begin with a good initialization for sampling. Given a prior mask $\mathcal{M}_o$, it's similarity to all candidate masks for $N:M$ sparsity is obtained through
