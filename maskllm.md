@@ -45,8 +45,8 @@ $N:M$ sparsity can be formulated as a mask selection problem with candidate set 
 \right\}
 ```
 For an LLM, there exists a substantial number of parameter blocks, denoted as $\left\{\mathcal{W}_i\right\}$, each requiring the selection of corresponding masks $\left\{\mathcal{M}_i\right\}$. For $N:M$ sparsity, we can define this objective for learning mask selection.
-<!-- ```math
-\large \left\{\mathcal{M}_i^*\right\} = \argmin_{\left\{\mathcal{M}_i \mid \mathcal{M}_i \in \mathcal{S}^{2:4}\right\}} 
+```math
+\large \{\mathcal{W}_i\} = \argmin_{\left\{\mathcal{M}_i \mid \mathcal{M}_i \in \mathcal{S}^{2:4}\right\}} 
 \mathbb{E}_{x \sim p(x)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
@@ -101,7 +101,7 @@ The perplexity and accuracy comparison with Magnitude, SparseGPT and Wanda on va
 <!-- <img src="Comparison.png" width="800" height="600"><br><br> -->
 ![Alt text](Comparison.png)<br>
 Increasing the calibration set beyond 256 does not improve SparseGPT performance, but MaskLLM scales to large datasets.<br>
-<!-- <img src="Sample vs Perplexity.png" width="800" height="600"><br><br> -->
+<!-- <img src="Sample vs Perplexity.png" width="800" height="600"><br><br> --> -->
 ![Alt text](Sample_vs_Perplexity.png)<br>
 Using prior masks pre-computed by one-shot methods can provide substantial benefits. We can initialize the Gumbel logits with pre-computed masks,which significantly accelerate the training.<br>
 <!-- <img src="Transfer Learning.png" width="800" height="200"><br><br> -->
