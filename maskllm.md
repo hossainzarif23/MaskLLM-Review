@@ -104,16 +104,16 @@ The perplexity and accuracy comparison with Magnitude, SparseGPT and Wanda on va
 ![Alt text](Comparison.PNG)<br>
 Increasing the calibration set beyond 256 does not improve SparseGPT performance, but MaskLLM scales to large datasets.<br>
 <!-- <img src="Sample vs Perplexity.png" width="800" height="600"><br><br> --> -->
-![Alt text](Sample_vs_Perplexity.png)<br>
+![Alt text](Sample_vs_Perplexity.PNG)<br>
 Using prior masks pre-computed by one-shot methods can provide substantial benefits. We can initialize the Gumbel logits with pre-computed masks,which significantly accelerate the training.<br>
 <!-- <img src="Transfer Learning.png" width="800" height="200"><br><br> -->
-![Alt text](Transfer_Learning.png)<br>
+![Alt text](Transfer_Learning.PNG)<br>
 If certain layers are pruned to a small magnitude, the gradients passed to their inputs will also diminish, thereby impeding mask learning and transfer to downstream tasks. Thats why sparse weight regularization provides a superior performance.<br>
 <!-- <img src="Regularization.png" width="400" height="200"><br><br> -->
-![Alt text](Regularization.png)<br>
+![Alt text](Regularization.PNG)<br>
 To deploy sparse LLMs for a single downstream task, the pre-computed general mask can be picked or an expert mask from scratch can be trained. However, both strategies show a drop in performance compared to the dense LLM as either they loss domain specific parameters for general mask or see limited data from target domain in case of expert mask. If general mask is leveraged as a prior and then transfer learning is applied to learn the masks, the model performance improves.<br>
 <!-- <img src="Transfer Learning for downstream tasks.png" width="800" height="200"><br><br> -->
-![Alt text](Transfer_Learning_for_downstream_tasks.png)<br>
+![Alt text](Transfer_Learning_for_downstream_tasks.PNG)<br>
 
 ## 6. Insights and Future Works
 - The superior performance is likely due to end to end training with optimizing the language modeling loss function, an well established training method to train LLMs. On the other hand, previous methods applied heuristics as they didn't attempt to work on a learnable optimal masking strategy, which clearly is an inferior strategy.
