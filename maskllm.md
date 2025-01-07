@@ -21,7 +21,7 @@ Existing methods can be classified into three categories: Structured Pruning, Un
 **The goal is to learn the optimal mask freezing out all the LLM parameters.**
 ### 4.1 Mask Selecttion and Non differentiability of Mask Selection
 $N:M$ sparsity can be formulated as a mask selection problem with candidate set of $S$ where, $\lvert S \rvert = \binom{M}{N}$. For $2:4$ sparsity, the binary mask M must contain exactly two zeros, resulting in a discrete candidate set $S^{2:4}$. Let's denote $\mathcal{W} \in \mathbb{R}^{1 \times 4}$ as a block of four consecutive parameters and $\mathcal{M}_i^* \in \mathbb{B}^{1 \times 4}$ as the optimal binary mask, indicating which weights should be pruned **(indicated by 0)**.
-$$
+```math
 \mathcal{S}^{2:4} = \left\{ \mathcal{M} \in \mathbb{B}^{1 \times 4} \mid \sum \mathcal{M} = 2 \right\} = \left\{ \hat{\mathcal{M}}_1, \hat{\mathcal{M}}_2, \hat{\mathcal{M}}_3, \hat{\mathcal{M}}_4, \hat{\mathcal{M}}_5, \hat{\mathcal{M}}_6 \right\} 
 = \left\{
 \begin{bmatrix}
@@ -43,7 +43,7 @@ $$
 \!0 & \!0 & \!1 & \!1
 \end{bmatrix}
 \right\}
-$$
+```math
 For an LLM, there exists a substantial number of parameter blocks, denoted as $\left\{\mathcal{W}_i\right\}$, each requiring the selection of corresponding masks $\left\{\mathcal{M}_i\right\}$. For $N:M$ sparsity, we can define this objective for learning mask selection.
 $$
 \large \left\{\mathcal{M}_i^*\right\} = \argmin_{\left\{\mathcal{M}_i \mid \mathcal{M}_i \in \mathcal{S}^{2:4}\right\}} 
