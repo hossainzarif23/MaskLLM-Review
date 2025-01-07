@@ -56,7 +56,7 @@ But, as we can see, finding the optimal combination of masks as selection from a
 ### 4.2 Walkaround
 Directly determining the exact optimal mask for a block is not feasible as the behavior of pruned LLMs should also depend on the pruning of other parameter blocks. The intuition is to sample masks independently for each block and measure the overall model quality after pruning. Consequently, let's define a categorical distribution with class probability $p_1, p_2, \cdots, p_{\lvert S \rvert}$ such that $\sum_{j} p_j = 1$. During the random sampling phase, if a certain mask achieves good quality during pruning, adjust the categorical distribution by increasing the probability of the sampled mask. With sufficient sampling and updates, the authors conjectured that this process would end with a distribution where the mask with high probability is more likely to maintain good quality after pruning. Thus the objective becomes
 ```math
-\large \left\{p^*(\mathcal{M}_i)\right\} = \argmin_{\left\{p(\mathcal{M}_i)\right\}}
+\large \{p^*(\mathcal{M}_i)\} = \underset{\{p(\mathcal{M}_i)\}}{\arg\min} 
 \;\mathbb{E}_{x \sim p(x), \mathcal{M}_i \sim p(\mathcal{M}_i)} 
 \left[ 
 \mathcal{L}_{\mathrm{LM}}(x; \{\mathcal{W}_i \odot \mathcal{M}_i\}) 
